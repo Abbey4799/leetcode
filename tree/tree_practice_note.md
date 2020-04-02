@@ -706,6 +706,301 @@ public:
     }
 ```
 
+### 3.30 
+
+#### 236. [Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+很经典的一道题，热热身
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:    
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root==NULL)  return NULL;
+        if(root->val == p->val||root->val == q->val) return root;
+        TreeNode *left,*right;
+        left = lowestCommonAncestor(root->left,p,q);
+        right = lowestCommonAncestor(root->right,p,q);
+        if(left&&right) return root;
+        if(left)  return left;
+        return right;
+    
+    }
+};
+```
+
+#### House Robber 系列
+
+##### [House Robber 1](https://leetcode.com/problems/house-robber/)
+
+基础动归
+
+```c++
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        if(nums.size()==1) return nums[0];
+        int a[nums.size()];
+        a[0] = nums[0];
+        a[1] = max(nums[0],nums[1]);
+        for(int i=2;i<nums.size();i++){
+            a[i] = max(nums[i]+a[i-2],a[i-1]);
+        }
+        return a[nums.size()-1];
+    }
+};
+```
+
+##### [House Robber 2](https://leetcode.com/problems/house-robber-ii/)
+
+在1的基础上多了一个条件，即房子排列成一个环。所以对于取第一个和不取第一个分别讨论即可。
+
+```c++
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(nums.size()==0) return 0;
+        if(nums.size()==1) return nums[0];
+        int a[nums.size()],b[nums.size()];
+        
+        a[0] = 0;
+        a[1] = nums[1];
+        for(int i=2;i<nums.size();i++){
+            a[i] = max(nums[i]+a[i-2],a[i-1]);
+        }
+        
+        b[0] = nums[0];
+        b[1] = max(nums[0],nums[1]);
+        for(int i=2;i<nums.size()-1;i++){
+            b[i] = max(nums[i]+b[i-2],b[i-1]);
+        }
+        return max(a[nums.size()-1],b[nums.size()-2]);
+        
+    }
+};
+```
+
+### 3.31
+
+#### [House Robber 3](https://leetcode.com/problems/house-robber-iiI/)
+
+光看题容易误解把每一层加在一起，再使用House Robber II的方法即可。但是相邻两层其实可以同时取的，只要不在一棵子树上即可。例如[2,1,3,null,4]的结果是7 。
+
+##### 解法一：递归
+
+与House Robber I、II想法相似，取这个节点与不取这个节点。注意这种动归思想是两个方向，I是过去的一点一点累积上去，用一个一维数组记住。而III是用递归去搜索未来。
+
+最开始的做法：超时了；因为每一次递归都递归了很多次子节点，重复的工作。可以把它们都记录下来。可以用hashmap记住每个根节点的最大rob。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int rob(TreeNode* root) {
+        if(root==NULL) return 0;
+        int val = 0;
+        //之前否定递归是因为觉得需要考虑节点的相邻状况
+        //但这种相邻状况其实是可以通过手动表示出来的。
+        if(root->left){
+            val += rob(root->left->left) + rob(root->left->right);
+        }
+        if(root->right){
+            val += rob(root->right->left) + rob(root->right->right);
+        }
+        return max(val + root->val,rob(root->left)+rob(root->right));
+    }
+    
+};
+```
+
+改进版：
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int help(TreeNode* root,unordered_map<TreeNode*,int>& mm){
+        if(root==NULL) return 0;
+        if(mm.count(root))  return mm[root];
+        int val = 0;
+        //之前否定递归是因为觉得需要考虑节点的相邻状况
+        //但这种相邻状况其实是可以通过手动表示出来的。
+        if(root->left){
+            val += help(root->left->left,mm) + help(root->left->right,mm);
+        }
+        if(root->right){
+            val += help(root->right->left,mm) + help(root->right->right,mm);
+        }
+        mm[root] = max(val + root->val,help(root->left,mm)+help(root->right,mm));
+        return mm[root];
+    }
+    
+    
+    int rob(TreeNode* root) {
+        unordered_map<TreeNode*,int> mm;
+        return help(root,mm);
+    }
+    
+};
+```
+
+##### 解法二：递归+数组保存状态
+
+用二维数组表示取该值和不取该值的两种情况。一开始写错了：
+
+虽然乍一看跟解法一相似，其实不然。解法一中自动选取了取与不取中的最大值。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+  //错误做法
+    vector<int> help(TreeNode* root){
+        if(root==NULL) return vector<int>(2,0);
+        vector<int> left = help(root->left);
+        vector<int> right = help(root->right);
+        vector<int> ans;
+      //错误，有时候当然不取比取更大
+        ans.push_back(left[1]+right[1]);
+        ans.push_back(left[0]+right[0]+root->val);
+        return ans;
+        
+    }
+
+    int rob(TreeNode* root) {
+        if(root == NULL) return 0;
+        vector<int> ans = help(root);
+        return max(ans[0],ans[1]);
+    }
+    
+};
+```
+
+更改：
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> help(TreeNode* root){
+        if(root==NULL) return vector<int>(2,0);
+        vector<int> left = help(root->left);
+        vector<int> right = help(root->right);
+        vector<int> ans(2,0);
+        ans[0] = max(left[0],left[1])+max(right[0],right[1]);
+        ans[1] = left[0]+right[0]+root->val;
+        return ans;
+        
+    }
+
+    int rob(TreeNode* root) {
+        if(root == NULL) return 0;
+        vector<int> ans = help(root);
+        return max(ans[0],ans[1]);
+    }
+    
+};
+```
+
+### 4.2. 
+
+#### \863. [All Nodes Distance K in Binary Tree](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/)
+
+学到了！对于树中间的一个点相关判断，可以用==霍夫曼tree==的方法给每个点赋予一个string，这个string里面隐含了子树情况。最后判断string之间的差别即可。
+
+同时注意，可以用map记录，比一开始想的vector好用很多。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    unordered_map<TreeNode*, string> map;
+    string path;
+    
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int K) {
+        vector<int> ans;
+        if(root==NULL)  return ans;
+        string p;
+        
+        help(root,target,p);
+      //学会遍历map key：v.first value：v.second
+        for(auto& v : map){
+            TreeNode* key = v.first;
+            
+            int i;
+            for(i=0;i<map[key].size()&&i<path.size()&&map[key][i]==path[i];i++);
+            if((path.size()-i)+(map[key].size()-i)==K) ans.push_back(key->val);
+        }
+        
+        return ans;
+        
+    }
+    
+  //霍夫曼标注
+    void help(TreeNode* root,TreeNode* target,string p){
+        if(root==NULL) return;
+        if(root == target) path = p;
+        map[root] = p;
+        
+        help(root->left,target,p+"0");
+        help(root->right,target,p+"1");
+    }
+    
+};
+```
+
+
+
 ## 其他
 
 - **尾递归**：尾递归是指在返回时，==直接返回递归函数调用的值，不做额外的运算==。比如，第一节中斐波那契数列的递归是返回: return fib(N-1) + fib(N-2);。返回时，需要做加法运算，这样的递归调用就==不属于尾递归==。

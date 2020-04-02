@@ -46,7 +46,8 @@ using namespace std;
 //    ss.push(t);
 //    while(!ss.empty()){
 //        //学到就是赚到
-//        ss.pop(&t);
+//        t = ss.top();
+//        ss.pop();
 //        cout << t->data << endl;
 //        for(int m=MAXN-1;m>=0;m--){
 //            if(t->child[m]) ss.push(t->child[m]);

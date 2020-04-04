@@ -1,5 +1,7 @@
 # Tree刷题记录
 
+递归（包括前序后序中序遍历的应用，往往是后序思想）、迭代、层次遍历
+
 ## 递归类题目积累
 
 ### 3.12 \24. [Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)
@@ -555,7 +557,7 @@ public:
 };
 ```
 
-### 3.21 \1028. [Recover a Tree From Preorder Traversal](https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/)
+### ==3.21 \1028. [Recover a Tree From Preorder Traversal](https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/)==
 
 ##### 解法一：自己想的递归
 
@@ -792,7 +794,7 @@ public:
 
 ### 3.31
 
-#### [House Robber 3](https://leetcode.com/problems/house-robber-iiI/)
+#### ==[House Robber 3](https://leetcode.com/problems/house-robber-iiI/)==
 
 光看题容易误解把每一层加在一起，再使用House Robber II的方法即可。但是相邻两层其实可以同时取的，只要不在一棵子树上即可。例如[2,1,3,null,4]的结果是7 。
 
@@ -994,6 +996,273 @@ public:
         
         help(root->left,target,p+"0");
         help(root->right,target,p+"1");
+    }
+    
+};
+```
+
+### 4.3
+
+####==\968. [Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/)==
+
+最开始我想着用迭代来做，从上到下，每一个节点都放或不放，需要不断地回退，最终还是有例子无法通过。迭代这块需要加强。
+
+> 小何思考：其实回过头来发现，很多题都是用递归版的后序遍历的思想（House robber III, binary tree cameras,Distribute Coins in Binary Tree），因为父亲节点总是子节点的状态集合。以后一道题没思路，不妨想想后序遍历，每一个父亲节点的状态被子节点影响的状况有哪些？
+>
+> - House robber III：取父亲节点+孩子的孩子节点、不取父亲节点+孩子节点
+> - binary tree cameras：如下所述
+> - Distribute Coins in Binary Tree：总是要接收孩子节点的出入
+
+- 如果子节点有一个不可观，该节点的状态一定要安装摄像头。
+
+- 如果子节点有一个安装摄像头了，该节点都可以不安装摄像头。
+- 如果子节点已经保住自身，也没安装摄像头，则该节点的状态可以由父亲节点来拯救。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int ans=0;
+    
+    int minCameraCover(TreeNode* root) {
+        if(root==NULL) return 0;
+        if(dfs(root)==2) ans++;
+        return ans;
+    }
+    
+    // 0:该节点安装了摄像头 1:该节点未安装摄像头但是可观 2:该节点不可观
+    int dfs(TreeNode* root){
+        if(root==NULL) return 1;
+        int left = dfs(root->left);
+        int right = dfs(root->right);
+        if(left==2 || right==2){
+            ans++;
+            return 0;
+        }else if(left==0 || right==0){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+};
+```
+
+#### \1145. [Binary Tree Coloring Game](https://leetcode.com/problems/binary-tree-coloring-game/)
+
+注意切分为了三个部分以后就很好想了。值得注意的就是涉及到数树的节点数的题一律用递归。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int left = 0;
+    int right = 0;
+    
+    bool btreeGameWinningMove(TreeNode* root, int n, int x) {
+        count(root,x);
+        int remain = n - 1 - left - right;
+        int max1 = max(max(left,right),remain);
+        int max2 = left + right + remain - max1;
+        if(max1 > max2) return true;
+        return false;
+    }
+    
+    //记住数数用递归
+    int count(TreeNode* root,int x){
+        if(root==NULL) return 0;
+        int l = count(root->left,x);
+        int r = count(root->right,x);
+        if(root->val == x){
+            left = l;
+            right = r;
+        }
+        return 1 + l + r;
+    }
+};
+```
+
+#### \257.[Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths/)
+
+解决路径相关问题的必须掌握的一道题。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<string> ans;
+    
+    vector<string> binaryTreePaths(TreeNode* root) {
+        if(root==NULL) return ans;
+        dfs(root,to_string(root->val));
+        return ans;
+    }
+    
+    void dfs(TreeNode* root,string x){
+        string ss;
+        if(root->left == NULL&&root->right == NULL){
+            ans.push_back(x);
+            return;
+        }
+        if(root->left)  dfs(root->left,x + "->" + to_string(root->left->val));
+        if(root->right) dfs(root->right,x + "->" + to_string(root->right->val));
+    }
+};
+```
+
+### 4.4. 
+
+#### \979. [Distribute Coins in Binary Tree](https://leetcode.com/problems/distribute-coins-in-binary-tree/)
+
+感觉跟\968. [Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/)的思路有点相似，不妨总是从==后序遍历+判断父亲节点与孩子节点的关系==入手。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int ans = 0;
+    
+    int distributeCoins(TreeNode* root) {
+        if(root==NULL) return 0;
+        help(root);
+        return ans;
+    }
+    
+    int help(TreeNode* root){
+        if(root==NULL) return 0;
+        //承接孩子的变化，孩子的变化可能有正有负
+        root->val += help(root->left);
+        root->val += help(root->right);
+        //只留1个。注意有可能正有可能负，但是移动的次数是绝对值
+        ans += abs(root->val-1);
+        return root->val-1;
+    }
+};
+```
+
+#### \987. [Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/)
+
+并不典型的一道题，纯练练手。关键技术点为给每个点分配横纵坐标。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    unordered_map<int,pair<int,int>> M;
+    int min = 0;
+    int max = 0;
+    
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        help(root,make_pair(0,0));
+        //先对x进行分类
+        vector<vector<pair<int,int>>> temp(max-min+1,vector<pair<int,int>>(0,make_pair(0,0)));
+        //再根据y进行分类
+        vector<vector<int>> ans(max-min+1,vector<int>(0,0));
+        for(auto& v : M){
+            int val = v.first;
+            pair<int,int> p = v.second;
+            //pair: first为val，second为y值
+            temp[p.first-min].push_back(make_pair(val,p.second));
+        }
+        //排序
+        for(int i=0;i<temp.size();i++){
+            sort(temp[i].begin(),temp[i].end(),[](pair<int,int> a,pair<int,int> b){
+                //如果y值相同返回val小的那个
+                if(a.second==b.second)  return a.first < b.first;
+                //返回y值大的
+                return a.second > b.second;
+            });
+            for(int j=0;j<temp[i].size();j++){
+                ans[i].push_back(temp[i][j].first);
+            }
+        }
+        return ans;
+    }
+    
+    //给每个点编横纵坐标
+    void help(TreeNode* root,pair<int,int> num){
+        if(root==NULL) return;
+        M[root->val] = num;
+        //记录最终x的范围，方便构建矩阵
+        if(num.first-1 < min) min = num.first;
+        if(num.first+1 > max) max = num.first;
+        help(root->left,make_pair(num.first-1,num.second-1));
+        help(root->right,make_pair(num.first+1,num.second-1));
+    }
+};
+```
+
+#### \124. [Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+
+这道题并不像hard难度的题。值得注意的是如果用递归做“取与不取根节点”的题，要么像==[House Robber 3](https://leetcode.com/problems/house-robber-iiI/)==、==\968. [Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/)==一样显式地表现出两种情况，要么像这道题一样只定义“取”，然后用全局变量记录最大值。
+
+> 小何思考：最大值相关的题都比较好想，但最优情况类的题不是那么好想。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int ans = -100;
+
+    int maxPathSum(TreeNode* root) {
+        help(root);
+        return ans;
+    }
+    
+    int help(TreeNode* root) {
+        if(root==NULL) return 0;
+        int left = help(root->left);
+        int right = help(root->right);
+        int temp = max(max(max(right+root->val,left+root->val),left+right+root->val),root->val);
+        if(temp > ans) ans = temp;
+        return max(max(right+root->val,left+root->val),root->val);
     }
     
 };

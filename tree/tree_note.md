@@ -126,3 +126,19 @@
     - <img src="readmepic/image-20200315224807098.png" alt="image-20200315224807098" style="zoom: 33%;" />
     - <img src="readmepic/image-20200315225016130.png" alt="image-20200315225016130" style="zoom: 33%;" />
 
+- 满二叉树(full binary tree)和完美二叉树(perfect binary tree)
+
+  - **2.3 完美二叉树(Perfect Binary Tree)**：完美二叉树：全满
+
+    <img src="/Users/apple/Library/Application Support/typora-user-images/image-20200421101109916.png" alt="image-20200421101109916" style="zoom:50%;" />
+
+  - **2.4 完全二叉树(Complete Binary Tree)**：从根结点到倒数第二层满足完美二叉树，最后一层可以不完全填充，其叶子结点都靠左对齐。
+  
+    <img src="/Users/apple/Library/Application Support/typora-user-images/image-20200421101118342.png" alt="image-20200421101118342" style="zoom:50%;" />
+  
+  - **2.5 满二叉树(Full Binary Tree)**：任意节点的子节点数目只有 0 和 2 两种可能。
+  
+    <img src="/Users/apple/Library/Application Support/typora-user-images/image-20200421101127063.png" alt="image-20200421101127063" style="zoom:50%;" />
+  
+    
+

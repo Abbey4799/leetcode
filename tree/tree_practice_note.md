@@ -1268,6 +1268,193 @@ public:
 };
 ```
 
+### 4.5. 
+
+#### Path Sum系列
+
+##### [\112. Path Sum](https://leetcode.com/problems/path-sum/)
+
+基础题,Path Sum II 差不多，用vector<vector<int>>全局变量保存即可。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool ans = false;
+    int target = 0;
+    
+    bool hasPathSum(TreeNode* root, int sum) {
+        if(root==NULL) return false;
+        target = sum;
+        help(root,0);
+        return ans;
+    }
+    
+    void help(TreeNode* root,int num){
+        if(root->left==NULL&&root->right==NULL&&root->val+num==target){
+            ans = true;
+            return;
+        }
+        num += root->val;
+        if(root->left)  help(root->left,num);
+        if(root->right)  help(root->right,num);
+    }
+};
+```
+
+##### [\437. Path Sum III](https://leetcode.com/problems/path-sum-iii/)
+
+最开始和前面思考的类似，对于每一个节点有三种情况：延续前面的root，从该节点开始，以及不要该节点。但是这样做递归无疑会超时，因为重复了太多次情况。
+
+其实最关键的点为：如果是从根节点开始计算是非常简单的，那就通过递归让每一个节点都当一次根节点。所以一道题用了两重递归。学到了！
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int ans = 0;
+    
+    int pathSum(TreeNode* root, int sum) {
+        if(root==NULL) return 0;
+        help(root,sum);
+        pathSum(root->left,sum);
+        pathSum(root->right,sum);
+        return ans;
+    }
+    
+    void help(TreeNode* root,int sum){
+        if(root==NULL) return;
+        sum -= root->val;
+        if(!sum)    ans++;
+        help(root->left,sum);
+        help(root->right,sum);
+    }
+};
+```
+
+### 4.7.
+
+#### [\96. Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees/)
+
+一个常规动态规划。可以把内层循环单独看作一个 int help(int n)的函数，来专门计算每一个值的numTrees。
+
+```c++
+class Solution {
+public:
+    int numTrees(int n) {
+        unordered_map<int,int> M;
+        M[0] = 1;
+        M[1] = 1;
+        int left = 0;
+        int right = 0;
+        for(int i=2;i<=n;i++){
+            int sum = 0;
+            for(int j=1;j<=i;j++){
+                left = M[j-1];
+                right = M[i-j];
+                sum += left*right;
+            }
+            M[i] = sum;
+        }
+        return M[n];
+    }
+    
+};
+```
+
+#### 4.8. 
+
+#### [\95. Unique Binary Search Trees II](https://leetcode.com/problems/unique-binary-search-trees-ii/)
+
+闻者伤心，因为一个愚蠢的错误卡了我半个多小时。
+
+```c++
+        vector<TreeNode*> ans;
+        for(int i=bg;i<ed;i++){
+            vector<TreeNode*> left = help(vec,bg,i);
+            vector<TreeNode*> right = help(vec,i+1,ed);
+          //老天爷，不能这么写...虽然在循环里面改变了指向，但是你push进去的时候是一个指针啊悲伤逆流成河
+          	TreeNode *T = new TreeNode(vec[i]);
+            for(int j=0;j<left.size();j++){
+                for(int k=0;k<right.size();k++){
+                    T->left = left[j];
+                    T->right = right[k];
+                    ans.push_back(T);
+                }
+            }
+        }
+```
+
+更改后：当然也可以用数组保存状态实现动态规划，不过这里应该是个三维数组。
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode*> generateTrees(int n) {
+        vector<vector<vector<TreeNode*>>> memo(n+1, vector<vector<TreeNode*>>(n+1));
+        vector<int> vec;
+        vector<TreeNode*> ans;
+        if(n==0) return ans;
+        for(int i=1;i<=n;i++){
+            vec.push_back(i);
+        }
+        return help(vec,0,n,memo);
+    }
+    
+    vector<TreeNode*> help(vector<int> vec,int bg,int ed,vector<vector<vector<TreeNode*>>> &memo){
+        if(memo[bg][ed].size())   return memo[bg][ed];
+        int size = ed - bg;
+        vector<TreeNode*> temp;
+        temp.push_back(NULL);
+        if(size == 0){
+            memo[bg][ed] = temp;
+            return temp;
+        }
+        temp.pop_back();
+        
+        vector<TreeNode*> ans;
+        for(int i=bg;i<ed;i++){
+            vector<TreeNode*> left = help(vec,bg,i,memo);
+            vector<TreeNode*> right = help(vec,i+1,ed,memo);
+            for(int j=0;j<left.size();j++){
+                for(int k=0;k<right.size();k++){
+                    TreeNode *T = new TreeNode(vec[i]);
+                    T->left = left[j];
+                    T->right = right[k];
+                    ans.push_back(T);
+                }
+            }
+        }
+        return memo[bg][ed] = ans;
+    }
+};
+```
+
 
 
 ## 其他

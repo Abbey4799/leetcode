@@ -3,7 +3,8 @@ Note for leetcode(updating...)
 
 - 以知识点类别进行刷题，目前已复习知识点：
   - [排序](sort)
-  - [树(ing)](tree)
+  - [树](tree)
+  - [搜索与索引](search)(ing)
 - 每个知识点的整理基本包含三类笔记，以“树”这一知识点为例：
   - [基于数据结构课程ppt复习相关知识点](tree/tree_note.md)：tree_node.md
   - [复现基础知识](tree/tree_code.cpp)：tree_code.cpp（基本可直接运行）

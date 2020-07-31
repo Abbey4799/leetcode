@@ -60,7 +60,7 @@ public:
 
 - 重复上述两步，直到==当前节点为空==
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200409203956622.png" alt="image-20200409203956622" style="zoom: 67%;" />
+<img src="pic/image-20200409203956622.png" alt="image-20200409203956622" style="zoom: 67%;" />
 
 ```c++
 //Morris算法中序遍历版本。

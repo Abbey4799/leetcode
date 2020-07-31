@@ -32,7 +32,7 @@
 
 ##### 邻接矩阵
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200422193320218.png" alt="image-20200422193320218" style="zoom:50%;" />
+<img src="readmepic/image-20200422193320218.png" alt="image-20200422193320218" style="zoom:50%;" />
 
 ##### 邻接表
 
@@ -116,7 +116,7 @@ DFS+BFS代码见[文件](DFS+BFS.cpp)
 
 - 主要思想：
 
-  <img src="/Users/apple/Library/Application Support/typora-user-images/image-20200422201640455.png" alt="image-20200422201640455" style="zoom:50%;" />
+  <img src="readmepic/image-20200422201640455.png" alt="image-20200422201640455" style="zoom:50%;" />
 
   可用反证法证明。
 
@@ -210,7 +210,7 @@ DFS+BFS代码见[文件](DFS+BFS.cpp)
   - **第i个数组元素**代表包含集合元素i的树结点
   - 根结点的双亲为负数，绝对值表示**集合中的元素个数**
 
-  <img src="/Users/apple/Library/Application Support/typora-user-images/image-20200722124620612.png" alt="image-20200722124620612" style="zoom:40%;" />
+  <img src="readmepic/image-20200722124620612.png" alt="image-20200722124620612" style="zoom:40%;" />
 
 - 时间复杂度分析：
 
@@ -218,7 +218,7 @@ DFS+BFS代码见[文件](DFS+BFS.cpp)
 
   - Union(x,y)的前提是Find(x), Find(y)，因此完成n次搜索的总时间将达到
 
-    <img src="/Users/apple/Library/Application Support/typora-user-images/image-20200722125142399.png" alt="image-20200722125142399" style="zoom: 25%;" />
+    <img src="readmepic/image-20200722125142399.png" alt="image-20200722125142399" style="zoom: 25%;" />
 
   - 改进方法：
 
@@ -241,7 +241,7 @@ DFS+BFS代码见[文件](DFS+BFS.cpp)
 
 ##### 边上权值==非负情形==的单源最短路径问题 —  Dijkstra算法
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200422210832665.png" alt="image-20200422210832665" style="zoom:50%;" />
+<img src="readmepic/image-20200422210832665.png" alt="image-20200422210832665" style="zoom:50%;" />
 
 可以得到v0到所有节点的最短距离
 
@@ -290,11 +290,11 @@ void Graph<NameType, DistType> :: ShortestPath(int v)
 
 ##### 边上权值为==任意值==的单源最短路径问题 — Bellman和Ford算法
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200423190003077.png" alt="image-20200423190003077" style="zoom:50%;" />
+<img src="readmepic/image-20200423190003077.png" alt="image-20200423190003077" style="zoom:50%;" />
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200423190014007.png" alt="image-20200423190014007" style="zoom:50%;" />
+<img src="readmepic/image-20200423190014007.png" alt="image-20200423190014007" style="zoom:50%;" />
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200423190105661.png" alt="image-20200423190105661" style="zoom:50%;" />
+<img src="readmepic/image-20200423190105661.png" alt="image-20200423190105661" style="zoom:50%;" />
 
 ```c++
 void BellmanFord(Graph <float> &G, int v,float dist[ ], int path[ ]) {
@@ -332,7 +332,7 @@ void BellmanFord(Graph <float> &G, int v,float dist[ ], int path[ ]) {
 
 本质就是把每个点应用BF+改成一个矩阵
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200423191047935.png" alt="image-20200423191047935" style="zoom:50%;" />
+<img src="readmepic/image-20200423191047935.png" alt="image-20200423191047935" style="zoom:50%;" />
 
 
 
@@ -381,7 +381,7 @@ void Graph<NameType, DistType>::Floyd(){
 
 - `闭包矩阵`
 
-  <img src="/Users/apple/Library/Application Support/typora-user-images/image-20200423192020781.png" alt="image-20200423192020781" style="zoom:50%;" />
+  <img src="readmepic/image-20200423192020781.png" alt="image-20200423192020781" style="zoom:50%;" />
 
 #### 拓扑排序
 
@@ -399,11 +399,11 @@ void Graph<NameType, DistType>::Floyd(){
 - 在AOV网络中选择一个**没有直接前驱**的顶点，输出、删除该顶点、删除它所有边
 - 直到所有全部顶点已输出，拓扑有序序列形成
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200722130421404.png" alt="image-20200722130421404" style="zoom:30%;" />
+<img src="readmepic/image-20200722130421404.png" alt="image-20200722130421404" style="zoom:30%;" />
 
 ###### 实现
 
-<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200722130520614.png" alt="image-20200722130520614" style="zoom:50%;" />
+<img src="readmepic/image-20200722130520614.png" alt="image-20200722130520614" style="zoom:50%;" />
 
 - count数组：代表前驱节点数量；
 
@@ -412,6 +412,6 @@ void Graph<NameType, DistType>::Floyd(){
   - 进栈：顶点i进栈，count[i] = top，top = i // 这是为了索引
   - 出栈：j = top; top = count[top] //相当于倒退回了一步，输出j
 
-  <img src="/Users/apple/Library/Application Support/typora-user-images/image-20200722131634971.png" alt="image-20200722131634971" style="zoom:50%;" />
+  <img src="readmepic/image-20200722131634971.png" alt="image-20200722131634971" style="zoom:50%;" />
 
   ​                          			建栈									2、4入栈			4出栈，0入栈			0出栈，3入栈

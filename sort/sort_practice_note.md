@@ -2,6 +2,8 @@
 
 ### 2.24 [Sort Colors](https://leetcode.com/problems/sort-colors/)
 
+用快排的思想，但是比快排还要简单
+
 ```c++
 class Solution {
 public:
@@ -25,6 +27,11 @@ public:
 ```
 
 ### 2.25 [Sort List](https://leetcode.com/problems/sort-list/)
+
+对链表进行排序，只要涉及到链表：
+
+- 如果跟中点有关：快慢指针
+- 归并时非常简单，像穿针引线一样
 
 ```c++
 /**
@@ -79,7 +86,78 @@ public:
 };
 ```
 
+### 3.2 [Insertion Sort List](https://leetcode.com/problems/insertion-sort-list/)
+
+对链表进行插入排序
+
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        
+        if(!head || head->next == NULL) return head;
+        
+        ListNode *mark;
+        int min = head->val;
+        for(mark = head->next;mark != NULL;mark = mark->next){
+            if(mark->val < min) min = mark->val;
+        }
+        
+        //回忆起fake node的好处了
+        ListNode *temp = new ListNode(min);
+        //循环插入一般需要四个指针，记住不要把q和pr搞混了
+        ListNode *p,*q,*pr,*r;
+        int flag;
+        
+        temp->next = head;
+        head = temp;
+        
+        pr = head->next;
+        r = head->next->next;
+        while(r){
+            flag = 0;
+            p = head;
+            q = head->next;
+            while(q!=r){
+                if(r->val >= p->val && r->val <= q->val){
+                    pr->next = r->next;
+                    r->next = q;
+                    p->next = r;
+                    r = pr;
+                    flag = 1;
+                    break;
+                }else{
+                    p = p->next;
+                    q = q->next;
+                }
+            }
+            // for(test = head; test != NULL; test = test->next)
+            //     cout << test->val;
+            // cout << endl;
+            if(!flag) pr = pr->next;
+            r = r->next;
+        }
+        return head->next;
+        
+    }
+};
+```
+
+
+
 ### 2.26 [Wiggle Sort II](https://leetcode.com/problems/wiggle-sort-ii/)
+
+通过排序使得每个元素都比旁边两个要大
+
+先排序，然后重新组合
 
 ```c++
 class Solution {
@@ -126,6 +204,10 @@ public:
 
 ### 2.27 [Largest Number](https://leetcode.com/problems/largest-number/)
 
+用一个包含数字的array组合成最大的数
+
+不用一位一位的判断，直接判断是把a放前面大还是把b放前面大，学会这种==对sort重定义的方式==。
+
 ```c++
 class Solution {
 public:
@@ -169,6 +251,10 @@ public:
 
 #### 215. [Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
 
+找到数组中第k大的元素
+
+用快排的方法，主要还是二分法的想法
+
 ```c++
 class Solution {
 public:
@@ -204,6 +290,8 @@ public:
 ```
 
 #### 216. 41. [First Missing Positive](https://leetcode.com/problems/first-missing-positive/)
+
+找缺失的最小正数
 
 ```c++
 class Solution {
@@ -273,6 +361,8 @@ public:
 ```
 
 #### 89. 23 Merge k Sorted Lists
+
+只要涉及到多个+合并，就用归并的方法
 
 ```c++
 /**
@@ -372,70 +462,9 @@ public:
 };
 ```
 
-### 3.2 [Insertion Sort List](https://leetcode.com/problems/insertion-sort-list/)
-
-```c++
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
- * };
- */
-class Solution {
-public:
-    ListNode* insertionSortList(ListNode* head) {
-        
-        if(!head || head->next == NULL) return head;
-        
-        ListNode *mark;
-        int min = head->val;
-        for(mark = head->next;mark != NULL;mark = mark->next){
-            if(mark->val < min) min = mark->val;
-        }
-        
-        //回忆起fake node的好处了
-        ListNode *temp = new ListNode(min);
-        //循环插入一般需要四个指针，记住不要把q和pr搞混了
-        ListNode *p,*q,*pr,*r;
-        int flag;
-        
-        temp->next = head;
-        head = temp;
-        
-        pr = head->next;
-        r = head->next->next;
-        while(r){
-            flag = 0;
-            p = head;
-            q = head->next;
-            while(q!=r){
-                if(r->val >= p->val && r->val <= q->val){
-                    pr->next = r->next;
-                    r->next = q;
-                    p->next = r;
-                    r = pr;
-                    flag = 1;
-                    break;
-                }else{
-                    p = p->next;
-                    q = q->next;
-                }
-            }
-            // for(test = head; test != NULL; test = test->next)
-            //     cout << test->val;
-            // cout << endl;
-            if(!flag) pr = pr->next;
-            r = r->next;
-        }
-        return head->next;
-        
-    }
-};
-```
-
 ### 3.4 35. [Search Insert Position](https://leetcode.com/problems/search-insert-position/)
+
+复习二分法
 
 ```c++
 class Solution {
@@ -475,6 +504,10 @@ public:
 ```
 
 ### 3.5 \74. [Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/)
+
+对一个矩阵进行搜索
+
+难道...不是把它转化为一个vector就好了吗
 
 ```c++
 class Solution {

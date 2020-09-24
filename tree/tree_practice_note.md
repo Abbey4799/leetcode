@@ -6,6 +6,8 @@
 
 ### 3.12 \24. [Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)
 
+给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+
 递推关系：swapPairs(head) = swapPairs(head.next.next)
 
 ```c++
@@ -35,6 +37,8 @@ public:
 - 通过递归可以避免找前一个节点，Magic！
 
 #### \894. [All Possible Full Binary Trees](https://leetcode.com/problems/all-possible-full-binary-trees/)
+
+返回包含 `N` 个结点的所有可能满二叉树的列表。 答案的每个元素都是一个可能树的根结点。
 
 递推关系: allPossibleFBT(N) = allPossibleFBT(i) + allPossibleFBT(N – 1 - i)，其中i为奇数，1<= i<N。
 
@@ -82,9 +86,11 @@ public:
 
 ### 3.13 \416. [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
 
+分割等和子集（给定一个**只包含正整数**的**非空**数组。是否可以将这个数组分割成两个子集，使得两个子集的元素和相等）
+
 一个系列的题：
 
-状态转移方程：
+状态转移方程：不取这个数 || 取这个数
 
 ```c++
 dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i]]
@@ -108,6 +114,8 @@ public:
         if(sum%2) return false;
         int target = sum/2;
         bool dp[nums.size()+1][target+1];
+      
+        //查看数组是否可以组成sum/2
         
         //初始化
         //注意：这里的dp[i][j]包括取这个数以及不取这个数，所以一定可以构成0的，只要不取这个数
@@ -158,6 +166,10 @@ public:
 ### 3.14 \473. [Matchsticks to Square](https://leetcode.com/problems/matchsticks-to-square/)
 
 Yes! 仔细想一定可以想出来的，好脑瓜子！
+
+是否能将火柴拼成正方形
+
+递归 + 回溯
 
 ```c++
 class Solution {
@@ -212,6 +224,10 @@ Btw：神奇的剪枝！
 ## 树类题积累
 
 ### 3.16 \101. [Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)
+
+检查树是否是对称的
+
+递归的思想，直接用递归公式做判断的决定
 
 ```c++
 /**
@@ -273,6 +289,10 @@ public:
 
 #### [Binary Tree Pruning](https://leetcode.com/problems/binary-tree-pruning/)
 
+二叉树剪枝，移除所有不包含1的子树
+
+递归的思想，先把子树都剪枝 + 再判断这是不是值为0的叶子结点
+
 ```c++
 /**
  * Definition for a binary tree node.
@@ -298,6 +318,8 @@ public:
 ```
 
 #### [Merge Two Binary Trees](https://leetcode.com/problems/merge-two-binary-trees/)
+
+合并两个二叉树，合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则**不为** NULL 的节点将直接作为新二叉树的节点。
 
 ```c++
 /**
@@ -511,6 +533,8 @@ public:
 
 ### 3.19. \889. [Construct Binary Tree from Preorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/)
 
+用前序和后序恢复二叉树的
+
 ```c++
 /**
  * Definition for a binary tree node.
@@ -558,6 +582,8 @@ public:
 ```
 
 ### ==3.21 \1028. [Recover a Tree From Preorder Traversal](https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/)==
+
+用先序遍历还原二叉树
 
 ##### 解法一：自己想的递归
 
@@ -745,6 +771,8 @@ public:
 ##### [House Robber 1](https://leetcode.com/problems/house-robber/)
 
 基础动归
+
+不能抢相邻两间屋子的钱
 
 ```c++
 class Solution {
@@ -950,6 +978,8 @@ public:
 
 #### \863. [All Nodes Distance K in Binary Tree](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/)
 
+巧用霍夫曼tree，可以表示每个节点的信息
+
 学到了！对于树中间的一个点相关判断，可以用==霍夫曼tree==的方法给每个点赋予一个string，这个string里面隐含了子树情况。最后判断string之间的差别即可。
 
 同时注意，可以用map记录，比一开始想的vector好用很多。
@@ -1057,7 +1087,7 @@ public:
 
 #### \1145. [Binary Tree Coloring Game](https://leetcode.com/problems/binary-tree-coloring-game/)
 
-注意切分为了三个部分以后就很好想了。值得注意的就是涉及到数树的节点数的题一律用递归。
+注意切分为了三个部分以后就很好想了。值得注意的就是涉及到**数树的节点数**的题一律用==递归==。
 
 ```c++
 /**
@@ -1138,6 +1168,8 @@ public:
 #### \979. [Distribute Coins in Binary Tree](https://leetcode.com/problems/distribute-coins-in-binary-tree/)
 
 感觉跟\968. [Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/)的思路有点相似，不妨总是从==后序遍历+判断父亲节点与孩子节点的关系==入手。
+
+几个状态：1 0 -1
 
 ```c++
 /**
@@ -1352,6 +1384,8 @@ public:
 
 #### [\96. Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees/)
 
+给定一个整数 *n*，求以 1 ... *n* 为节点组成的二叉搜索树有多少种？
+
 一个常规动态规划。可以把内层循环单独看作一个 int help(int n)的函数，来专门计算每一个值的numTrees。
 
 ```c++
@@ -1381,6 +1415,8 @@ public:
 #### 4.8. 
 
 #### [\95. Unique Binary Search Trees II](https://leetcode.com/problems/unique-binary-search-trees-ii/)
+
+不同的二叉搜索树，这次要返回这样的根节点
 
 闻者伤心，因为一个愚蠢的错误卡了我半个多小时。
 
@@ -1455,7 +1491,501 @@ public:
 };
 ```
 
+## 二叉树
 
+### 8.22
+
+##### [P1087 FBI树](https://www.luogu.com.cn/problem/P1087)
+
+已知最底层的节点，根据规则恢复整个tree，并后续遍历。
+
+最开始就是最质朴的方式：用队列的方式进行倒着的层次遍历，构建整个tree，然后再后续遍历。
+
+```c++
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int N;
+string S;
+
+struct TreeNode {
+	char val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode(char x) : val(x), left(NULL), right(NULL) {}
+};
+
+queue<TreeNode*> qq;
+
+void post(TreeNode* root) {
+	if (root == NULL) return;
+	post(root->left);
+	post(root->right);
+	cout << root->val;
+}
+
+
+int main()
+{
+	cin >> N >> S;
+	for (int i = 0; i < S.size(); i++) {
+		char ch;
+		if (S[i] == '1')	ch = 'I';
+		else ch = 'B';
+		TreeNode* T = new TreeNode(ch);
+		qq.push(T);
+	}
+
+	TreeNode* root = NULL;
+	
+	while (!qq.empty()) {
+		int size = qq.size();
+		if (size == 1) {
+			root = qq.front();
+			break;
+		}
+		for (int i = 0; i < size; i = i+2) {
+			char ch;
+			TreeNode* t1 = qq.front();
+			qq.pop();
+			TreeNode* t2 = qq.front();
+			qq.pop();
+			if (t1->val == 'I' && t2->val == 'I') ch = 'I';
+			else if (t1->val == 'B' && t2->val == 'B') ch = 'B';
+			else ch = 'F';
+			TreeNode* T = new TreeNode(ch);
+			T->left = t1;
+			T->right = t2;
+			qq.push(T);
+		}
+	}
+
+	post(root);
+
+	return 0;
+}
+
+
+
+```
+
+也可以用递归来做（总算对递归熟练多了555），证明了一个论点：**很多树的题目事实上根本不用把树建立出来**。由于是后序遍历，先输出左树再输出右树，很容易想到两个并列的递归语句可以实现。通过return来保障对上一层的节点值判断：
+
+```c++
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int N;
+string S;
+
+
+char help(int s, int e) {
+	if (s == e) {
+		cout << S[s];
+		return S[s];
+	}
+
+	int mid = (s + e) / 2;
+	char c1 = help(s, mid);
+	char c2 = help(mid + 1, e);
+
+	char final;
+	if (c1 == 'I' && c2 == 'I') final =  'I';
+	else if (c1 == 'B' && c2 == 'B') final = 'B';
+	else final = 'F';
+
+	cout << final;
+	return final;
+}
+
+
+int main()
+{
+	cin >> N >> S;
+	for (int i = 0; i < S.size(); i++) {
+		if (S[i] == '1')	S[i] = 'I';
+		else S[i] = 'B';
+	}
+	help(0, S.size()-1);
+
+	return 0;
+}
+
+
+
+```
+
+### 8.23
+
+##### [P1030 求先序排列](https://www.luogu.com.cn/problem/P1030)
+
+根据中序+后序求出先序，经典题，复习一遍。
+
+```c++
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+string mid,post;
+
+
+void help(int ms,int me,int ps,int pe) {
+
+  //Attention: 左右子树可能为空
+	if (me < ms || pe < ps) return;
+	if (ms == me) {
+		cout << mid[ms];
+		return;
+	}
+
+	char ch = post[pe];
+	int pos = mid.find(ch);
+	cout << ch;
+
+	help(ms, pos - 1, ps, ps + pos - 1 - ms);
+	help(pos + 1, me, ps + pos - ms, pe - 1);
+  
+}
+
+
+int main()
+{
+	cin >> mid >> post;
+	help(0,mid.size()-1,0,post.size()-1);
+
+	return 0;
+}
+
+
+
+```
+
+注意Attention处，**左右子树可能为空**。
+
+## 树的直径
+
+可以通过两次DFS解决
+
+##### [SP1437 PT07Z - Longest path in a tree](https://www.luogu.com.cn/problem/SP1437)
+
+无权无向树，找到整个树中的最长路径的长度。
+
+```c++
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+
+const int MAXN = 1e4 + 5;
+int N,o,mx,node;
+int visited[MAXN];
+vector<vector<int> > G(MAXN, vector<int>());
+
+void dfs(int s,int l) {
+	visited[s] = 1;
+
+	if (G[s].size() == 1 && s != o) {
+		if (l > mx) {
+			mx = l;
+			node = s;
+		}
+		return;
+	}
+	for (int i = 0; i < G[s].size(); i++) {
+		int v = G[s][i];
+		if (!visited[v]) {
+			dfs(v,l+1);
+		}
+	}
+}
+
+int main()
+{
+	cin >> N;
+	for (int i = 0; i < N - 1; i++) {
+		int u, v;
+		cin >> u >> v;
+		G[u].push_back(v);
+		G[v].push_back(u);
+	}
+
+	o = 1;
+	dfs(1, 0);
+  
+	memset(visited, 0, sizeof(visited));
+	o = node;
+	dfs(node, 0);
+
+	cout << mx;
+	return 0;
+}
+
+
+
+```
+
+## 最近公共祖先
+
+##### [P3379 【模板】最近公共祖先（LCA）](https://www.luogu.com.cn/problem/P3379)
+
+"求解最近公共祖先，常用的方法是**树上倍增或者树链剖分**。"
+
+之前做过的题是求指定两个节点的最近公共祖先，用递归，如果左右两个子树返回的值正好是这两个节点的值，该节点就是最近公共祖先。
+
+先用这种暴力解法，时间复杂度为O(Mn)，得到30分，剩下的都TLE了。
+
+```c++
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+
+int N, M, S;
+int u, v;
+const int MAXN = 5e5 + 5;
+int visited[MAXN];
+vector<vector<int> > G(MAXN, vector<int>());
+
+int LCA(int s) {
+	if (s == u || s == v) return s;
+	
+	int flag = 0;
+	int mark = 0;
+	for (int i = 0; i < G[s].size(); i++) {
+		int nex = G[s][i];
+		if (visited[nex]) continue;
+		visited[nex] = 1;
+    
+		int tmp = LCA(nex);
+		if (tmp) {
+			if(tmp == u || tmp == v) flag++;
+			mark = tmp;
+		}
+	}
+
+	if (flag < 2) return mark;
+	return s;
+}
+
+int main()
+{
+	cin >> N >> M >> S;
+	
+	for (int i = 0; i < N - 1; i++) {
+		int n1, n2;
+		cin >> n1 >> n2;
+		G[n1].push_back(n2);
+		G[n2].push_back(n1);
+	}
+
+	for (int i = 0; i < M; i++) {
+		memset(visited, 0, sizeof(visited));
+		cin >> u >> v;
+		cout << LCA(S) << endl;
+	}
+
+	return 0;
+}
+```
+
+第二种暴力解法，由两个结点在同一高度的一起往上爬，每次同时爬**一步**，相遇的时候就是LCA。时间复杂度为O(Mlogn)，最终70分，TLE了三个点。
+
+因此最开始需要：
+
+- D[MAXN]：记录每个节点的深度
+-  F[MAXN]：记录每个节点的父亲节点
+
+<img src="/Users/apple/Library/Application Support/typora-user-images/image-20200824092837540.png" alt="image-20200824092837540" style="zoom:50%;" />
+
+随后将二者跳到同一高度，每次同时爬一步，相遇的时候就是LCA。
+
+```c++
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+
+int N, M, S;
+int u, v;
+const int MAXN = 5e5 + 5;
+int visited[MAXN], D[MAXN], F[MAXN];
+vector<vector<int> > G(MAXN, vector<int>());
+
+
+void depth(int node, int l) {
+	D[node] = l;
+	for (int i = 0; i < G[node].size(); i++) {
+		int nex = G[node][i];
+
+		if (visited[nex]) continue;
+		visited[nex] = 1;
+
+		F[nex] = node;
+		depth(nex, l + 1);
+	}
+}
+
+int dfs(int u, int v) {
+	//假设u的深度小于v的深度
+	if (D[u] != D[v]) {
+		if (D[u] > D[v]) swap(u, v);
+		return dfs(u, F[v]);
+	}
+
+	if (u == v) return u;
+	return dfs(F[u], F[v]);
+}
+
+int main()
+{
+	cin >> N >> M >> S;
+	
+	for (int i = 0; i < N - 1; i++) {
+		int n1, n2;
+		cin >> n1 >> n2;
+		G[n1].push_back(n2);
+		G[n2].push_back(n1);
+	}
+
+	visited[S] = 1;
+	depth(S, 1);
+
+	for (int i = 0; i < M; i++) {
+		int n1, n2;
+		cin >> n1 >> n2;
+		cout << dfs(n1, n2) << endl;
+	}
+
+	return 0;
+}
+
+```
+
+第三种方法，**树上倍增**，是基于第二种方法的改进。之前第二种方法每次只跳一步，而树上倍增每次跳$2^i$步，并从大到小跳，例如32,16,8,4,2,1，大的跳不过去，再调小。
+
+> 这是因为从小开始跳，可能会出现“悔棋”的现象。拿 55 为例，从小向大跳，5≠1+2+45\\=1+2+4,所以我们还要回溯一步，然后才能得出5=1+45=1+4；而从大向小跳，直接可以得出5=4+5=4+1。
+
+因此，不再用F[]数组记录父亲节点，而是用F[]\[]记录每个节点$2^i$级别的祖先。
+
+算法核心之一——**关键的递推式**：$2^i = 2^{i-1} + 2^{i-1}$
+
+```
+F[now][i] = F[F[now][i-1]][i-1]
+```
+
+代码如下，90分，TLE了一个点，暂时先放下，记住这种优化方式。
+
+```c++
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+
+int N, M, S;
+int u, v;
+const int MAXN = 5e5 + 5;
+int visited[MAXN], D[MAXN], F[MAXN][20], lg[MAXN];
+vector<vector<int> > G(MAXN, vector<int>());
+
+
+void depth(int node, int l) {
+
+	for (int i = 0; i < G[node].size(); i++) {
+		int nex = G[node][i];
+
+		if (visited[nex]) continue;
+		visited[nex] = 1;
+
+		D[nex] = l + 1;
+		F[nex][0] = node;
+		for (int j = 1; j <= lg[D[nex]]; j++) {
+			F[nex][j] = F[F[nex][j - 1]][j - 1];
+		}
+
+		depth(nex, l + 1);
+	}
+}
+
+int dfs(int u, int v) {
+	//规定u的深度小于v的深度
+	if (D[u] > D[v]) swap(u, v);
+
+
+	while (D[u] < D[v]) {
+		v = F[v][lg[D[v] - D[u]] - 1];
+	}
+
+	if (u == v) return u;
+
+	for (int k = lg[D[u]]-1; k >= 0; k--) {
+		if (F[u][k] != F[v][k]) {
+			u = F[u][k];
+			v = F[v][k];
+		}
+	}
+
+	return F[u][0];
+}
+
+int main()
+{
+	cin >> N >> M >> S;
+	
+	for (int i = 0; i < N - 1; i++) {
+		int n1, n2;
+		cin >> n1 >> n2;
+		G[n1].push_back(n2);
+		G[n2].push_back(n1);
+	}
+
+	// 常数优化：预先算出log[i]+1的值
+	for (int i = 1; i <= N; i++) {
+		lg[i] = lg[i-1] + (1 << lg[i - 1] == i);
+	}
+
+	visited[S] = 1;
+	D[S] = 0;
+	depth(S, 0);
+
+	for (int i = 0; i < M; i++) {
+		int n1, n2;
+		cin >> n1 >> n2;
+		cout << dfs(n1, n2) << endl;
+	}
+
+	return 0;
+}
+
+
+
+```
 
 ## 其他
 

@@ -32,6 +32,13 @@ int min(int a,int b){
     return (a<b)?a:b;
 }
 
+/*
+插入排序：
+将一个记录插入到已排好顺序的序列中，
+形成一个新的、记录数增1的有序序列。
+*/
+
+
 //插入排序
 void insertion_sort(int* array,int length){
     if(length==0){
@@ -68,6 +75,14 @@ void insertion_sort_2(int* array,int length){
     showarray(name,array,length);
 }
 
+
+/*
+冒泡排序:
+基本思想:依次比较*相邻*的两个元素的顺序，
+如果顺序不对，则将两者交换，
+最值元素“上浮”到序列一端，然后缩小排序范围
+重复这样的操作直到整个序列被排好序。
+*/
 void bubble_sort(int* a,int length){
     for(int i = 0;i < length;i++){
         for(int j = length-1;j > i;j--){
@@ -77,6 +92,15 @@ void bubble_sort(int* a,int length){
     string name ="bubble_sort:  ";
     showarray(name, a, length);
 }
+
+/*
+选择排序：
+1. 首先选出最小的项，与第一项交换位置
+2. 选第二小的项，与第二项交换位置
+...
+与冒泡排序区别在于选择待排序列*最小*项的操作只进行一次交换：
+
+*/
 
 void selection_sort(int* a,int length){
     for(int i = 0;i < length;i++){
@@ -93,6 +117,13 @@ void selection_sort(int* a,int length){
     string name ="selection_sort:  ";
     showarray(name, a, length);
 }
+
+/*
+归并排序：
+- 基于分治法
+- 基本思想：将两个或两个以上的有序序列合并为一个新的有序序列
+*/
+
 
 
 //自顶向下
@@ -118,6 +149,8 @@ void merge_arrays(int* a,int begin,int end){
     showarray(name, a, 8);
 }
 
+
+
 void merging_sort(int* a,int begin,int end,int length){
     int mid = (begin + end)/2;
     if(mid <= begin){
@@ -130,8 +163,8 @@ void merging_sort(int* a,int begin,int end,int length){
 
 
 
-
 //自底向上
+//步长为1，2，4...
 void merging_sort_down2up(int* a,int length){
     for(int i = 1; i < length;i=i*2){
         for(int j = 0; j < length;j = j+2*i){
@@ -141,7 +174,6 @@ void merging_sort_down2up(int* a,int length){
 //    string name = "merging_sort:  ";
 //    showarray(name, a, 8);
 }
-
 
 
 //快速排序
@@ -159,6 +191,32 @@ int partition(int* a,int begin, int end){
     return i;
 }
 
+/*
+快速排序: 平均性能最好的排序算法
+基本思想(分治、二分法):
+- 选择*控制值*，对剩下的数依次判断，将小于控制值的值放在左边，将大于控制值的值放右边
+- 确定控制值的位置后，对控制值左、右两面分别进行以上操作
+*/
+
+
+int partition(vector<int>& a,int begin,int end){
+    int temp = a[begin];
+    int i = end - 1,j = begin;
+    while(i > j){
+        while(a[i] >= temp && i > j) i--;
+        swap(a[i],a[j]);
+        while(a[j] <= temp && i > j) j++;
+        swap(a[i],a[j]);
+    }
+    return i;
+}
+void QuickSort(vector<int>& a,int begin,int end){
+    if(begin >= end) return;
+    int place = partition(a,begin,end);
+    QuickSort(a,begin,place);
+    QuickSort(a,place+1,end);
+}
+
 
 void QuickSort(int* a, int begin, int end){
     if(begin >= end) return;
@@ -172,6 +230,11 @@ void push_interval(stack<int>& s, int begin, int end){
     s.push(end);
     s.push(begin);
 }
+
+/*
+改进1:如果程序递归空间不足
+优先把长序列压栈，栈的深度最多为log2n
+*/
 
 void QuickSort_stack(int* a, int begin, int end,stack<int> s){
     push_interval(s, begin, end);
@@ -195,13 +258,24 @@ void QuickSort_stack(int* a, int begin, int end,stack<int> s){
     }
 }
 
+/*
+改进2:划分基准的选择
+从序列中选择三项，然后选择三项之间的中间项
+
+改进3:对于短序列，插入排序表现更好
+
+改进4:重复值———三路划分
+*/
+
 
 //heapsort
 /*
  最大堆：如果树T中的任一结点的值不小于它的任一子结点的值
+ （但也并非排好序的）
+ 仍需要第二个循环进行排序
 */
 
-//排序以a[i]为根的树，默认除了a[0]已经是最大堆，现在要调整a[0]
+//排序以a[i]为根的树，默认除了a[i]已经是最大堆，现在要调整a[i]
 void siftdown(int a[],int i,int n){
     int j;
     while((j = 2*i + 1) < n){
@@ -258,10 +332,25 @@ int main(int argc, const char * argv[]) {
     heap_sort(array,8);
 }
 
+/*
+希尔排序：主要与插入排序有关
+1. 在最好情况下（本身有序），时间复杂度为O(n)
+2. 对于短序列，插入排序很有效
+
+1. 先将序列转化为若干小序列，在这些*小序列*内进行*插入排序*
+2. 逐渐扩大小序列的规模，而减少小序列个数，使得待排序序列逐渐处于*更有序的状态*
+3. 最后对整个序列进行扫尾直接插入排序，从而完成排序
+*/
+
+
+/*
+Most significant digit first(MSD): 分、分、分...收
+Least significant digit first(LSD): 分、收、分、收...
+*/
 
 /*
  桶排序
- 基本思路是：
+ 基本思路是：确定最值、 划分区间、分配到桶、桶内快排、最后合并、桶越多时间越少、空间越大（接近O(n)）
  
   将待排序元素划分到不同的痛。先扫描一遍序列求出最大值 maxV 和最小值 minV ，设桶的个数为 k ，则把区间 [minV, maxV] 均匀划分成 k 个区间，每个区间就是一个桶。将序列中的元素分配到各自的桶。
  对每个桶内的元素进行排序。可以选择任意一种排序算法。
